@@ -39,7 +39,6 @@
 
 static COMPLEX_T Sine_at_60Hz[MAX_FREQ_SAMPLES];
 
-bool F = true;
 int analogPin = A0;
 long D;
 
@@ -54,34 +53,25 @@ void setup (){
  int time_samples = MAX_TIME_SAMPLES;
   int freq_samples = MAX_FREQ_SAMPLES;
   int power = Find_Power( freq_samples );
-
+//Signal sampling//
 for( i = 0; i < time_samples; i++ ){
   Sine_at_60Hz[i].real = analogRead(analogPin);
   delay(3);
-  }  
+  } 
+//FFT computing//
   long previous_time = micros();
   Compute_FFT( direction, power, Sine_at_60Hz );
   D = micros() - previous_time;
-
-}
-
-void loop (){
-   
-if(F){
-for( int i = 0; i < MAX_FREQ_SAMPLES/2; i++ ){
+//FFT transmision//
+  for( int i = 0; i < MAX_FREQ_SAMPLES/2; i++ ){
     Serial.println("\n");
     //Serial.println(D);
     Serial.println(cplx_Magnitude( Sine_at_60Hz[i] ));
     Serial.println("\n");
   }
-  F=false;
-  }
-/*    
-fprintf( stdout, "\tSine_at_60Hz(f)\n" );
-for( i = 0; i < freq_samples/2; i++ )
-  fprintf( stdout, "%.*e\t%.*e\n",
-    16, i*delta_freq, 16, cplx_Magnitude( Sine_at_60Hz[i] ) );
-*/
 
+}
 
-} /* main  */
+void loop (){
+   
+} 
